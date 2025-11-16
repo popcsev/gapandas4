@@ -17,6 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - More Pythonic and readable
   - Easier for beginners to learn and use
 
+#### New Simplified Query Function
+- **`query_report()`** - New convenience function for simple queries
+  - Accepts string dimensions and metrics
+  - Auto-formats property_id
+  - Supports all filtering and ordering options
+  - 80% less code than RunReportRequest approach
+  - Example: `df = gp.query_report(service_account, property_id, ['country'], ['activeUsers'], '2024-01-01', '2024-01-31')`
+
 #### Normalization Helpers
 - `normalize_dimensions()` - Convert strings, objects, or lists to Dimension objects
 - `normalize_metrics()` - Convert strings, objects, or lists to Metric objects
@@ -34,9 +42,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Examples and Documentation
 - Added `examples/simple_syntax.py` - Comprehensive before/after comparisons
+- **Updated ALL examples to use simplified syntax:**
+  - `examples/basic_query.py` - Now uses `query_report()` instead of `RunReportRequest`
+  - `examples/advanced_filters.py` - Converted to `query_report()` with filters
+  - `examples/data_export.py` - Uses `query_report()` for all single queries
 - Updated `examples/README.md` - Added simple syntax example
-- Updated main `README.md` - Prominent "What's New in v0.6.0" section
-- Updated all helper function examples to show simpler syntax
+- Updated main `README.md`:
+  - Prominent "What's New in v0.6.0" section at top
+  - "Simple Query" section showcasing `query_report()`
+  - All filter examples updated to use `query_report()`
+  - Collapsible "old syntax" reference for advanced users
 
 ### Testing
 - Added `tests/test_utils.py` - Comprehensive normalization tests

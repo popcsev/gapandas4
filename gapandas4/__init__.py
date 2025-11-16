@@ -1,6 +1,6 @@
 """GAPandas4 - Python package for accessing Google Analytics Data API for GA4 using Pandas."""
 
-from .gapandas4 import query, get_metadata
+from .gapandas4 import query, get_metadata, query_report
 from .gapandas4 import (
     ReportType,
     GAPandasException,
@@ -49,6 +49,7 @@ __version__ = "0.6.0"
 __all__ = [
     # Core functions
     "query",
+    "query_report",
     "get_metadata",
     # Enums
     "ReportType",
