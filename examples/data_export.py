@@ -2,6 +2,10 @@
 Data Export Examples
 
 This example demonstrates how to export Google Analytics data to various formats.
+
+NOTE: These examples use RunReportRequest (raw GA4 API) for querying data,
+then show export features. For simpler queries, see simple_syntax.py which shows
+how to use string syntax like dimensions=['country', 'city'].
 """
 
 import gapandas4 as gp
