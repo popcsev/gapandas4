@@ -167,6 +167,79 @@ See the [examples directory](examples/) for comprehensive filtering examples inc
 - Negation with `not_filter` or `!=`
 - Complex nested combinations
 
+#### Data export and utilities (NEW in v0.5.0!)
+
+##### Export to CSV, Excel, or JSON
+Easily export your analytics data to various formats:
+
+```python
+# Get your data
+df = gp.query(service_account, request)
+
+# Export to CSV
+gp.export_to_csv(df, 'analytics_data.csv')
+
+# Export to Excel
+gp.export_to_excel(df, 'analytics_data.xlsx')
+
+# Export to JSON
+gp.export_to_json(df, 'analytics_data.json')
+
+# Export multiple DataFrames to Excel with custom sheet names
+dfs = gp.query(service_account, batch_request, report_type="batch_report")
+gp.export_to_excel(dfs, 'analytics.xlsx', sheet_names=['Jan', 'Feb', 'Mar'])
+```
+
+##### Compare date ranges
+Compare metrics across different time periods:
+
+```python
+# Month-over-month comparison
+comparison = gp.compare_date_ranges(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['country'],
+    metrics=['activeUsers', 'sessions'],
+    current_start='2024-02-01',
+    current_end='2024-02-29',
+    previous_start='2024-01-01',
+    previous_end='2024-01-31'
+)
+
+# Result includes current, previous, absolute change, and % change
+print(comparison[['country', 'activeUsers_current', 'activeUsers_previous',
+                  'activeUsers_change', 'activeUsers_change_pct']])
+```
+
+##### Helper functions for common tasks
+Quick shortcuts for frequently-used queries:
+
+```python
+# Get top trending content
+trending = gp.get_trending_content(
+    service_account=service_account,
+    property_id=property_id,
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    limit=10
+)
+
+# Get top traffic sources
+sources = gp.get_traffic_sources(
+    service_account=service_account,
+    property_id=property_id,
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    limit=10
+)
+
+# Format date ranges easily
+last_7_days = gp.format_date_range(7)  # Returns (start_date, end_date)
+last_30_days = gp.format_date_range(30, 'yesterday')
+```
+
+See [examples/](examples/) for more comprehensive examples of data export, comparison, and helper functions.
+
 #### Batch report
 If you construct a protobuf payload using `BatchRunReportsRequest()` you can pass up to five requests at once. These 
 are returned as a list of Pandas dataframes, so will need to access them using their index. 
@@ -337,6 +410,9 @@ print(metadata)
 
 ### Features
 - **Easy-to-use filter helpers** (NEW in v0.5.0!) - Simple functions for dimension and metric filtering
+- **Data export utilities** (NEW in v0.5.0!) - Export to CSV, Excel, and JSON with one line of code
+- **Period comparison** (NEW in v0.5.0!) - Compare metrics across different time periods
+- **Helper functions** (NEW in v0.5.0!) - Get trending content, traffic sources, and more
 - **Full GA4 API support** - `RunReportRequest`, `BatchRunReportsRequest`, `RunPivotReportRequest`, `BatchRunPivotReportsRequest`, `RunRealtimeReportRequest`, and `GetMetadataRequest`
 - **Pandas DataFrame output** - Results returned as Pandas DataFrames with proper data types
 - **Type hints** - Full type hint support for better IDE autocomplete and type checking
@@ -345,9 +421,12 @@ print(metadata)
 
 ### What's New in v0.5.0
 - 🎉 **Filter helper functions** - Easy dimension and metric filtering
-- ⚡ **Automatic type conversion** - Metrics are automatically converted to int/float
-- 📚 **Examples directory** - Practical examples for common use cases
-- 🧪 **Comprehensive tests** - Filter functions fully tested
+- 📊 **Data export** - Export to CSV, Excel, and JSON formats
+- 📈 **Period comparison** - Month-over-month, year-over-year, and custom comparisons
+- ⚡ **Helper functions** - Trending content, traffic sources, date range formatting
+- 🚀 **Automatic type conversion** - Metrics automatically converted to int/float
+- 📚 **Examples directory** - Practical examples for all features
+- 🧪 **Comprehensive tests** - All functions fully tested
 - 📖 **Improved documentation** - More examples and clearer explanations
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history. 

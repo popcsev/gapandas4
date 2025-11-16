@@ -33,6 +33,31 @@ Comprehensive filtering examples covering:
 - Complex nested filters
 - Pattern matching
 
+### data_export.py (NEW!)
+Export your analytics data to various formats:
+- CSV export (single and batch)
+- Excel export (single and multiple sheets)
+- JSON export (multiple formats)
+- Custom export options
+- Filter and export workflows
+
+### data_comparison.py (NEW!)
+Compare metrics across time periods:
+- Month-over-month comparison
+- Year-over-year comparison
+- Week-over-week comparison
+- Growth analysis
+- Advanced comparison with filters
+- Date range helpers
+
+### helper_functions.py (NEW!)
+Convenient shortcuts for common tasks:
+- Get trending content/pages
+- Get top traffic sources
+- Analyze conversion rates
+- Date range formatting
+- Combined analysis workflows
+
 ## Running the Examples
 
 ```bash

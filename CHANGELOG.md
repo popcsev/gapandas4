@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.5.0] - 2025-11-16
 
 ### Added
+
+#### Filter Helper Functions
 - **Filter helper functions** - Easy-to-use functions for creating dimension and metric filters
   - `dimension_filter()` - Filter dimensions with operators: ==, !=, contains, starts_with, ends_with, in, regex, etc.
   - `metric_filter()` - Filter metrics with operators: ==, !=, >, >=, <, <=, between
@@ -16,21 +18,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `not_filter()` - Negate a filter expression
 - `FilterBuilder` class for programmatic filter creation
 - Comprehensive filter tests with 100% coverage (40+ test cases)
-- Examples directory with practical usage examples:
+
+#### Data Export Utilities
+- **Export functions** - One-line data export to multiple formats
+  - `export_to_csv()` - Export to CSV with custom options
+  - `export_to_excel()` - Export to Excel with multiple sheets support
+  - `export_to_json()` - Export to JSON with flexible formatting
+- Support for exporting single DataFrames or lists of DataFrames
+- Automatic handling of file paths and sheet names
+
+#### Period Comparison
+- **Date range comparison** - Compare metrics across different time periods
+  - `compare_date_ranges()` - Month-over-month, year-over-year, and custom period comparisons
+  - Automatically calculates absolute and percentage changes
+  - Supports all dimensions and metrics
+  - Works with filters for focused analysis
+
+#### Helper Functions
+- **Convenience functions** - Common analytics tasks made simple
+  - `get_trending_content()` - Get top pages/content by any metric
+  - `get_traffic_sources()` - Get top traffic sources with key metrics
+  - `format_date_range()` - Easy relative date range formatting (last 7 days, last 30 days, etc.)
+
+#### Examples and Documentation
+- New examples directory with practical usage examples:
   - `examples/basic_query.py` - Simple query examples
   - `examples/advanced_filters.py` - 10 comprehensive filtering examples
+  - `examples/data_export.py` - Export examples for all formats
+  - `examples/data_comparison.py` - Period comparison examples
+  - `examples/helper_functions.py` - Helper function usage
   - `examples/README.md` - Guide for using examples
-- Extensive README updates with filter documentation and examples
+- Extensive README updates with documentation for all new features
 
 ### Changed
-- Updated documentation with filter usage examples throughout
-- Improved feature list highlighting new filtering capabilities
+- Updated documentation with usage examples for all new features
+- Improved feature list highlighting filtering, export, and comparison capabilities
 - Enhanced error messages in filter functions with clear operator documentation
+- README now includes comprehensive sections for filters, exports, comparisons, and helpers
 
 ### Developer Experience
-- All filter functions fully documented with type hints
-- IntelliSense/autocomplete support for filter operations
+- All functions fully documented with type hints
+- IntelliSense/autocomplete support for all operations
 - Clear error messages when invalid operators or values are used
+- Consistent API across all utility functions
 
 ## [0.004] - 2025-11-16
 

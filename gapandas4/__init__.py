@@ -16,6 +16,15 @@ from .filters import (
     or_filter,
     not_filter,
 )
+from .utils import (
+    export_to_csv,
+    export_to_excel,
+    export_to_json,
+    compare_date_ranges,
+    get_trending_content,
+    get_traffic_sources,
+    format_date_range,
+)
 
 # Re-export Google Analytics types for convenience
 from google.analytics.data_v1beta.types import DateRange
@@ -52,6 +61,14 @@ __all__ = [
     "and_filter",
     "or_filter",
     "not_filter",
+    # Utility functions
+    "export_to_csv",
+    "export_to_excel",
+    "export_to_json",
+    "compare_date_ranges",
+    "get_trending_content",
+    "get_traffic_sources",
+    "format_date_range",
     # Google Analytics types
     "DateRange",
     "Dimension",
