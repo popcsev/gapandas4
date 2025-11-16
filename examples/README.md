@@ -25,6 +25,13 @@ The simplest way to query GA4 data. Perfect for getting started.
 - Dimensions and metrics
 - Simple data analysis
 
+### simple_syntax.py (NEW in v0.6.0!)
+Learn the new simplified syntax that reduces code by 50-80%:
+- Before/after comparisons
+- Using strings instead of Dimension/Metric objects
+- Mixing simple and advanced syntax
+- Code examples showing lines saved
+
 ### advanced_filters.py
 Comprehensive filtering examples covering:
 - Dimension filters (equals, contains, starts_with, regex, etc.)

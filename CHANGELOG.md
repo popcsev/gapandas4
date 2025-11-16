@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2025-11-16
+
+### Added
+
+#### Simplified Syntax - Major Developer Experience Improvement
+- **String-based dimensions and metrics** - Use plain strings instead of verbose object constructors
+  - `dimensions=['country', 'city']` instead of `dimensions=[Dimension(name="country"), Dimension(name="city")]`
+  - `metrics=['activeUsers', 'sessions']` instead of `metrics=[Metric(name="activeUsers"), Metric(name="sessions")]`
+  - Reduces code by 50-80% for common use cases
+  - More Pythonic and readable
+  - Easier for beginners to learn and use
+
+#### Normalization Helpers
+- `normalize_dimensions()` - Convert strings, objects, or lists to Dimension objects
+- `normalize_metrics()` - Convert strings, objects, or lists to Metric objects
+- `normalize_date_range()` - Convert tuples or objects to DateRange objects
+- Smart type detection and conversion
+- Comprehensive error handling with clear messages
+
+### Changed
+
+#### Updated Utility Functions
+- `compare_date_ranges()` - Now accepts string dimensions/metrics
+- `get_trending_content()` - Uses simplified syntax internally
+- `get_traffic_sources()` - Uses simplified syntax internally
+- All functions maintain backward compatibility
+
+#### Examples and Documentation
+- Added `examples/simple_syntax.py` - Comprehensive before/after comparisons
+- Updated `examples/README.md` - Added simple syntax example
+- Updated main `README.md` - Prominent "What's New in v0.6.0" section
+- Updated all helper function examples to show simpler syntax
+
+### Testing
+- Added `tests/test_utils.py` - Comprehensive normalization tests
+  - 30+ test cases covering all normalization scenarios
+  - Tests for single values, lists, mixed types
+  - Tests for error handling and edge cases
+  - Tests for advanced features (expressions, invisible metrics)
+
+### Technical Details
+- **100% backward compatible** - Old syntax still works perfectly
+- **Type-safe** - Full type hints for all normalization functions
+- **Flexible** - Mix strings and objects in the same list
+- **Advanced features preserved** - Metric expressions and invisible metrics still fully supported
+
+### Benefits
+- ✨ 50-80% less boilerplate code
+- 📖 More readable and maintainable code
+- 🚀 Faster development and prototyping
+- 🎯 Lower learning curve for new users
+- 🔧 Advanced features still available when needed
+
 ## [0.5.0] - 2025-11-16
 
 ### Added

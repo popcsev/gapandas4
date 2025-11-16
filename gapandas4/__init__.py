@@ -24,6 +24,9 @@ from .utils import (
     get_trending_content,
     get_traffic_sources,
     format_date_range,
+    normalize_dimensions,
+    normalize_metrics,
+    normalize_date_range,
 )
 
 # Re-export Google Analytics types for convenience
@@ -41,7 +44,7 @@ from google.analytics.data_v1beta.types import RunPivotReportRequest
 from google.analytics.data_v1beta.types import BatchRunPivotReportsRequest
 from google.analytics.data_v1beta.types import RunRealtimeReportRequest
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 __all__ = [
     # Core functions
@@ -69,6 +72,10 @@ __all__ = [
     "get_trending_content",
     "get_traffic_sources",
     "format_date_range",
+    # Normalization helpers
+    "normalize_dimensions",
+    "normalize_metrics",
+    "normalize_date_range",
     # Google Analytics types
     "DateRange",
     "Dimension",
