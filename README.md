@@ -42,6 +42,131 @@ df = gp.query(service_account, report_request, report_type="report")
 print(df.head())
 ```
 
+#### Filtering data (NEW in v0.5.0!)
+GAPandas4 now includes powerful, easy-to-use filter helpers that make it simple to filter your GA4 data without dealing with complex protobuf structures.
+
+##### Simple dimension filter
+Filter data to show only specific dimension values:
+
+```python
+import gapandas4 as gp
+
+# Get data only for United States
+us_filter = gp.dimension_filter("country", "==", "United States")
+
+request = gp.RunReportRequest(
+    property=f"properties/{property_id}",
+    dimensions=[gp.Dimension(name="city")],
+    metrics=[gp.Metric(name="activeUsers")],
+    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
+    dimension_filter=us_filter,  # Apply the filter
+)
+
+df = gp.query(service_account, request)
+```
+
+**Supported dimension operators:**
+- `==` or `equals` - Exact match
+- `!=` or `not_equals` - Not equal
+- `contains` - Contains substring
+- `not_contains` - Does not contain
+- `starts_with` or `begins_with` - Starts with string
+- `ends_with` - Ends with string
+- `in` - Value in list
+- `not_in` - Value not in list
+- `regex` or `matches_regex` - Regular expression match
+- `is_null`, `is_empty` - Is null/empty
+- `is_not_null`, `is_not_empty` - Is not null/empty
+
+##### Simple metric filter
+Filter data based on metric values:
+
+```python
+# Get only cities with more than 1000 active users
+high_traffic = gp.metric_filter("activeUsers", ">", 1000)
+
+request = gp.RunReportRequest(
+    property=f"properties/{property_id}",
+    dimensions=[gp.Dimension(name="city")],
+    metrics=[gp.Metric(name="activeUsers")],
+    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
+    metric_filter=high_traffic,  # Apply the filter
+)
+
+df = gp.query(service_account, request)
+```
+
+**Supported metric operators:**
+- `==` or `equals` - Equal to
+- `!=` or `not_equals` - Not equal to
+- `>` or `greater_than` - Greater than
+- `>=` or `greater_than_or_equal` - Greater than or equal
+- `<` or `less_than` - Less than
+- `<=` or `less_than_or_equal` - Less than or equal
+- `between` - Between two values (provide list: `[min, max]`)
+
+##### Combining filters with AND
+Combine multiple filters where all must be true:
+
+```python
+# US cities with more than 500 sessions
+combined = gp.and_filter([
+    gp.dimension_filter("country", "==", "United States"),
+    gp.metric_filter("sessions", ">", 500)
+])
+
+request = gp.RunReportRequest(
+    property=f"properties/{property_id}",
+    dimensions=[gp.Dimension(name="city")],
+    metrics=[gp.Metric(name="sessions")],
+    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
+    dimension_filter=combined,
+)
+
+df = gp.query(service_account, request)
+```
+
+##### Combining filters with OR
+Combine filters where at least one must be true:
+
+```python
+# Data for US, UK, or Canada
+multi_country = gp.or_filter([
+    gp.dimension_filter("country", "==", "United States"),
+    gp.dimension_filter("country", "==", "United Kingdom"),
+    gp.dimension_filter("country", "==", "Canada")
+])
+
+# Or use the simpler 'in' operator:
+multi_country = gp.dimension_filter("country", "in", ["United States", "United Kingdom", "Canada"])
+```
+
+##### Complex nested filters
+Create sophisticated filter combinations:
+
+```python
+# (US cities with >1000 sessions) OR (UK cities with >500 sessions)
+us_high = gp.and_filter([
+    gp.dimension_filter("country", "==", "United States"),
+    gp.metric_filter("sessions", ">", 1000)
+])
+
+uk_medium = gp.and_filter([
+    gp.dimension_filter("country", "==", "United Kingdom"),
+    gp.metric_filter("sessions", ">", 500)
+])
+
+complex_filter = gp.or_filter([us_high, uk_medium])
+```
+
+##### More filter examples
+See the [examples directory](examples/) for comprehensive filtering examples including:
+- Pattern matching with `starts_with`, `ends_with`, and regex
+- Range filtering with `between`
+- List filtering with `in` and `not_in`
+- Negation with `not_filter` or `!=`
+- Complex nested combinations
+
 #### Batch report
 If you construct a protobuf payload using `BatchRunReportsRequest()` you can pass up to five requests at once. These 
 are returned as a list of Pandas dataframes, so will need to access them using their index. 
@@ -210,7 +335,19 @@ metadata = gp.get_metadata(service_account, property_id)
 print(metadata)
 ```
 
-### Current features
-- Support for all current API functionality including `RunReportRequest`, `BatchRunReportsRequest`,
-  `RunPivotReportRequest`,  `BatchRunPivotReportsRequest`, `RunRealtimeReportRequest`, and `GetMetadataRequest`. 
-- Returns data in a Pandas dataframe, or a list of Pandas dataframes. 
+### Features
+- **Easy-to-use filter helpers** (NEW in v0.5.0!) - Simple functions for dimension and metric filtering
+- **Full GA4 API support** - `RunReportRequest`, `BatchRunReportsRequest`, `RunPivotReportRequest`, `BatchRunPivotReportsRequest`, `RunRealtimeReportRequest`, and `GetMetadataRequest`
+- **Pandas DataFrame output** - Results returned as Pandas DataFrames with proper data types
+- **Type hints** - Full type hint support for better IDE autocomplete and type checking
+- **Comprehensive testing** - 90%+ test coverage with pytest
+- **Modern Python** - Supports Python 3.8+
+
+### What's New in v0.5.0
+- 🎉 **Filter helper functions** - Easy dimension and metric filtering
+- ⚡ **Automatic type conversion** - Metrics are automatically converted to int/float
+- 📚 **Examples directory** - Practical examples for common use cases
+- 🧪 **Comprehensive tests** - Filter functions fully tested
+- 📖 **Improved documentation** - More examples and clearer explanations
+
+See [CHANGELOG.md](CHANGELOG.md) for full version history. 

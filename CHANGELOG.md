@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2025-11-16
+
+### Added
+- **Filter helper functions** - Easy-to-use functions for creating dimension and metric filters
+  - `dimension_filter()` - Filter dimensions with operators: ==, !=, contains, starts_with, ends_with, in, regex, etc.
+  - `metric_filter()` - Filter metrics with operators: ==, !=, >, >=, <, <=, between
+  - `and_filter()` - Combine multiple filters with AND logic
+  - `or_filter()` - Combine multiple filters with OR logic
+  - `not_filter()` - Negate a filter expression
+- `FilterBuilder` class for programmatic filter creation
+- Comprehensive filter tests with 100% coverage (40+ test cases)
+- Examples directory with practical usage examples:
+  - `examples/basic_query.py` - Simple query examples
+  - `examples/advanced_filters.py` - 10 comprehensive filtering examples
+  - `examples/README.md` - Guide for using examples
+- Extensive README updates with filter documentation and examples
+
+### Changed
+- Updated documentation with filter usage examples throughout
+- Improved feature list highlighting new filtering capabilities
+- Enhanced error messages in filter functions with clear operator documentation
+
+### Developer Experience
+- All filter functions fully documented with type hints
+- IntelliSense/autocomplete support for filter operations
+- Clear error messages when invalid operators or values are used
+
 ## [0.004] - 2025-11-16
 
 ### Added

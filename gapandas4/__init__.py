@@ -8,6 +8,14 @@ from .gapandas4 import (
     InvalidReportTypeError,
     InvalidPropertyIDError,
 )
+from .filters import (
+    FilterBuilder,
+    dimension_filter,
+    metric_filter,
+    and_filter,
+    or_filter,
+    not_filter,
+)
 
 # Re-export Google Analytics types for convenience
 from google.analytics.data_v1beta.types import DateRange
@@ -24,7 +32,7 @@ from google.analytics.data_v1beta.types import RunPivotReportRequest
 from google.analytics.data_v1beta.types import BatchRunPivotReportsRequest
 from google.analytics.data_v1beta.types import RunRealtimeReportRequest
 
-__version__ = "0.004"
+__version__ = "0.5.0"
 
 __all__ = [
     # Core functions
@@ -37,6 +45,13 @@ __all__ = [
     "ServiceAccountError",
     "InvalidReportTypeError",
     "InvalidPropertyIDError",
+    # Filter helpers
+    "FilterBuilder",
+    "dimension_filter",
+    "metric_filter",
+    "and_filter",
+    "or_filter",
+    "not_filter",
     # Google Analytics types
     "DateRange",
     "Dimension",
