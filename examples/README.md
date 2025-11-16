@@ -61,8 +61,8 @@ Convenient shortcuts for common tasks:
 ## Running the Examples
 
 ```bash
-# Install GAPandas4
-pip install gapandas4
+# Install GAPandas4 from this repository
+pip install git+https://github.com/popcsev/gapandas4.git
 
 # Run an example
 python examples/basic_query.py
