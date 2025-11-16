@@ -49,9 +49,9 @@ See [examples/simple_syntax.py](examples/simple_syntax.py) for detailed before/a
 GAPandas4 has been written to allow you to use as little code as possible. Unlike the previous version of GAPandas for Universal Analytics, which used a payload based on a Python dictionary, GAPandas4 now uses a Protobuf (Protocol Buffer) payload as used in the API itself. 
 
 #### Report
-The `query()` function is used to send a protobug API payload to the API. The function supports various report types 
-via the `report_type` argument. Standard reports are handled using `report_type="report"`, but this is also the 
-default. Data are returned as a Pandas dataframe. 
+The `query()` function is used to send a protobuf API payload to the API. The function supports various report types
+via the `report_type` argument. Standard reports are handled using `report_type="report"`, but this is also the
+default. Data are returned as a Pandas dataframe.
 
 ```python
 import gapandas4 as gp
@@ -74,6 +74,8 @@ report_request = gp.RunReportRequest(
 df = gp.query(service_account, report_request, report_type="report")
 print(df.head())
 ```
+
+> **💡 Tip:** For common queries, use our helper functions with simplified syntax instead! See [Data export and utilities](#data-export-and-utilities-new-in-v050) below for easier ways to query data using plain strings like `dimensions=['country', 'city']`.
 
 #### Filtering data (NEW in v0.5.0!)
 GAPandas4 now includes powerful, easy-to-use filter helpers that make it simple to filter your GA4 data without dealing with complex protobuf structures.

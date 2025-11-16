@@ -1,7 +1,11 @@
 """
 Advanced Filtering Examples
 
-This example demonstrates various filtering techniques with GAPandas4.
+This example demonstrates various filtering techniques with the raw GA4 API.
+
+NOTE: These examples show filter usage with RunReportRequest (raw GA4 API).
+You can also use filters with our simplified helper functions - see simple_syntax.py
+for examples of using string syntax like dimensions=['country', 'city'].
 """
 
 import gapandas4 as gp

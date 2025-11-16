@@ -1,7 +1,11 @@
 """
 Basic GAPandas4 Query Example
 
-This example demonstrates the simplest way to query Google Analytics 4 data.
+This example demonstrates how to use the raw GA4 API with RunReportRequest.
+
+NOTE: This shows the raw Google Analytics Data API syntax. For simpler queries,
+check out simple_syntax.py and our helper functions (compare_date_ranges,
+get_trending_content, etc.) which use simplified string syntax!
 """
 
 import gapandas4 as gp
