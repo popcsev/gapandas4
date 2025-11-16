@@ -1,11 +1,11 @@
 """
-Data Export Examples
+Data Export Examples (v0.6.0 - Simplified Syntax!)
 
-This example demonstrates how to export Google Analytics data to various formats.
+This example demonstrates exporting Google Analytics data to various formats
+using the NEW simplified query_report() function.
 
-NOTE: These examples use RunReportRequest (raw GA4 API) for querying data,
-then show export features. For simpler queries, see simple_syntax.py which shows
-how to use string syntax like dimensions=['country', 'city'].
+NOTE: Batch requests still use BatchRunReportsRequest since we query multiple
+date ranges at once. See simple_syntax.py for more simplified syntax examples.
 """
 
 import gapandas4 as gp
@@ -15,14 +15,14 @@ property_id = 'YOUR_PROPERTY_ID'
 
 # Example 1: Query and export to CSV
 print("Example 1: Export to CSV")
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="country"), gp.Dimension(name="city")],
-    metrics=[gp.Metric(name="activeUsers"), gp.Metric(name="sessions")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['country', 'city'],
+    metrics=['activeUsers', 'sessions'],
+    start_date='2024-01-01',
+    end_date='2024-01-31'
 )
-
-df = gp.query(service_account, request)
 
 # Export to CSV
 gp.export_to_csv(df, 'analytics_january.csv')
@@ -98,15 +98,16 @@ print("Example 7: Filter and export")
 # Get only US data and export
 us_filter = gp.dimension_filter("country", "==", "United States")
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="city")],
-    metrics=[gp.Metric(name="activeUsers"), gp.Metric(name="sessions")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    dimension_filter=us_filter,
+df_us = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['city'],
+    metrics=['activeUsers', 'sessions'],
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    dimension_filter=us_filter
 )
 
-df_us = gp.query(service_account, request)
 gp.export_to_csv(df_us, 'analytics_us_cities.csv')
 print()
 

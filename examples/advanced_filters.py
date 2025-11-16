@@ -1,11 +1,8 @@
 """
-Advanced Filtering Examples
+Advanced Filtering Examples (v0.6.0 - Simplified Syntax!)
 
-This example demonstrates various filtering techniques with the raw GA4 API.
-
-NOTE: These examples show filter usage with RunReportRequest (raw GA4 API).
-You can also use filters with our simplified helper functions - see simple_syntax.py
-for examples of using string syntax like dimensions=['country', 'city'].
+This example demonstrates filtering with the NEW simplified query_report() function.
+Uses plain strings for dimensions and metrics - much cleaner than the old syntax!
 """
 
 import gapandas4 as gp
@@ -18,15 +15,16 @@ property_id = 'YOUR_PROPERTY_ID'
 print("Example 1: Filter by country (US only)")
 us_filter = gp.dimension_filter("country", "==", "United States")
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="country"), gp.Dimension(name="city")],
-    metrics=[gp.Metric(name="activeUsers")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    dimension_filter=us_filter,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['country', 'city'],  # Simple strings!
+    metrics=['activeUsers'],  # Simple strings!
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    dimension_filter=us_filter
 )
 
-df = gp.query(service_account, request)
 print(df.head())
 print()
 
@@ -35,17 +33,16 @@ print()
 print("Example 2: Filter by metric (activeUsers > 1000)")
 high_traffic_filter = gp.metric_filter("activeUsers", ">", 1000)
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="city")],
-    metrics=[gp.Metric(name="activeUsers"), gp.Metric(name="sessions")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    metric_filter=high_traffic_filter,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['city'],  # Simple strings!
+    metrics=['activeUsers', 'sessions'],  # Simple strings!
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    metric_filter=high_traffic_filter
 )
 
-df = gp.query(service_account, request)
-print(df.head())
-print()
 
 # Example 3: Multiple countries using OR
 # Get data for US, UK, and Canada
@@ -59,15 +56,15 @@ multi_country_filter = gp.or_filter([
 # Alternative: Using IN operator (simpler!)
 # multi_country_filter = gp.dimension_filter("country", "in", ["United States", "United Kingdom", "Canada"])
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="country")],
-    metrics=[gp.Metric(name="activeUsers")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    dimension_filter=multi_country_filter,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['country'],
+    metrics=['activeUsers'],
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    dimension_filter=multi_country_filter
 )
-
-df = gp.query(service_account, request)
 print(df)
 print()
 
@@ -79,15 +76,15 @@ combined_filter = gp.and_filter([
     gp.metric_filter("sessions", ">", 500),
 ])
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="city")],
-    metrics=[gp.Metric(name="sessions"), gp.Metric(name="activeUsers")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    dimension_filter=combined_filter,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['city'],
+    metrics=['sessions', 'activeUsers'],
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    dimension_filter=combined_filter
 )
-
-df = gp.query(service_account, request)
 print(df.head(10))
 print()
 
@@ -96,15 +93,15 @@ print()
 print("Example 5: Pattern matching (pages starting with /blog/)")
 blog_filter = gp.dimension_filter("pagePath", "starts_with", "/blog/")
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="pagePath")],
-    metrics=[gp.Metric(name="screenPageViews")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    dimension_filter=blog_filter,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['pagePath'],
+    metrics=['screenPageViews'],
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    dimension_filter=blog_filter
 )
-
-df = gp.query(service_account, request)
 print(df.head(10))
 print()
 
@@ -113,15 +110,15 @@ print()
 print("Example 6: Regex filtering (product pages)")
 product_filter = gp.dimension_filter("pagePath", "regex", "^/product/[0-9]+$")
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="pagePath")],
-    metrics=[gp.Metric(name="screenPageViews")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    dimension_filter=product_filter,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['pagePath'],
+    metrics=['screenPageViews'],
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    dimension_filter=product_filter
 )
-
-df = gp.query(service_account, request)
 print(df.head())
 print()
 
@@ -130,15 +127,15 @@ print()
 print("Example 7: Range filtering (sessions between 100 and 500)")
 range_filter = gp.metric_filter("sessions", "between", [100, 500])
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="city")],
-    metrics=[gp.Metric(name="sessions"), gp.Metric(name="activeUsers")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    metric_filter=range_filter,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['city'],
+    metrics=['sessions', 'activeUsers'],
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    metric_filter=range_filter
 )
-
-df = gp.query(service_account, request)
 print(df.head())
 print()
 
@@ -157,15 +154,15 @@ uk_medium_traffic = gp.and_filter([
 
 complex_filter = gp.or_filter([us_high_traffic, uk_medium_traffic])
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="country"), gp.Dimension(name="city")],
-    metrics=[gp.Metric(name="sessions"), gp.Metric(name="activeUsers")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    dimension_filter=complex_filter,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['country', 'city'],
+    metrics=['sessions', 'activeUsers'],
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    dimension_filter=complex_filter
 )
-
-df = gp.query(service_account, request)
 print(df.head(20))
 print()
 
@@ -179,15 +176,15 @@ not_us_filter = gp.not_filter(
 # Alternative: Using != operator (simpler!)
 # not_us_filter = gp.dimension_filter("country", "!=", "United States")
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="country")],
-    metrics=[gp.Metric(name="activeUsers")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    dimension_filter=not_us_filter,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['country'],
+    metrics=['activeUsers'],
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    dimension_filter=not_us_filter
 )
-
-df = gp.query(service_account, request)
 print(df.head(10))
 print()
 
@@ -196,13 +193,13 @@ print()
 print("Example 10: Using FilterBuilder class")
 filter_obj = gp.FilterBuilder.dimension_filter("browser", "in", ["Chrome", "Firefox", "Safari"])
 
-request = gp.RunReportRequest(
-    property=f"properties/{property_id}",
-    dimensions=[gp.Dimension(name="browser")],
-    metrics=[gp.Metric(name="activeUsers")],
-    date_ranges=[gp.DateRange(start_date="2024-01-01", end_date="2024-01-31")],
-    dimension_filter=filter_obj,
+df = gp.query_report(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['browser'],
+    metrics=['activeUsers'],
+    start_date='2024-01-01',
+    end_date='2024-01-31',
+    dimension_filter=filter_obj
 )
-
-df = gp.query(service_account, request)
 print(df)

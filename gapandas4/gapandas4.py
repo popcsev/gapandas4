@@ -396,3 +396,107 @@ def get_metadata(service_account: str, property_id: str) -> pd.DataFrame:
         )
 
     return pd.DataFrame(metadata).sort_values(by=["Type", "API Name"]).drop_duplicates()
+
+
+# ============================================================================
+# Simplified Query Functions (v0.6.0+)
+# ============================================================================
+
+
+def query_report(
+    service_account: str,
+    property_id: str,
+    dimensions: Union[str, List[Union[str, Dimension]]],
+    metrics: Union[str, List[Union[str, Metric]]],
+    start_date: str,
+    end_date: str,
+    limit: Optional[int] = None,
+    offset: Optional[int] = None,
+    dimension_filter: Optional[FilterExpression] = None,
+    metric_filter: Optional[FilterExpression] = None,
+    order_bys: Optional[List[OrderBy]] = None,
+    **kwargs
+) -> pd.DataFrame:
+    """Query GA4 data with simplified syntax (strings instead of objects).
+
+    This is a convenience wrapper around query() that accepts plain strings
+    for dimensions and metrics instead of requiring Dimension/Metric objects.
+
+    Args:
+        service_account: Path to Google Service Account JSON keyfile
+        property_id: GA4 property ID (with or without 'properties/' prefix)
+        dimensions: Dimension name(s) as string(s) or Dimension object(s)
+        metrics: Metric name(s) as string(s) or Metric object(s)
+        start_date: Start date (YYYY-MM-DD or relative like '7daysAgo')
+        end_date: End date (YYYY-MM-DD or relative like 'today')
+        limit: Maximum number of rows to return
+        offset: Number of rows to skip
+        dimension_filter: Optional dimension filter expression
+        metric_filter: Optional metric filter expression
+        order_bys: Optional list of OrderBy objects for sorting
+        **kwargs: Additional RunReportRequest parameters
+
+    Returns:
+        DataFrame with query results
+
+    Example:
+        >>> # Simple query with string syntax!
+        >>> df = gp.query_report(
+        ...     service_account='client_secrets.json',
+        ...     property_id='123456789',
+        ...     dimensions=['country', 'city'],
+        ...     metrics=['activeUsers', 'sessions'],
+        ...     start_date='2024-01-01',
+        ...     end_date='2024-01-31',
+        ...     limit=100
+        ... )
+
+        >>> # With filters
+        >>> us_filter = gp.dimension_filter('country', '==', 'United States')
+        >>> df = gp.query_report(
+        ...     service_account='client_secrets.json',
+        ...     property_id='123456789',
+        ...     dimensions=['city'],
+        ...     metrics=['activeUsers'],
+        ...     start_date='2024-01-01',
+        ...     end_date='2024-01-31',
+        ...     dimension_filter=us_filter
+        ... )
+    """
+    # Import here to avoid circular dependency
+    from .utils import normalize_dimensions, normalize_metrics
+
+    # Normalize inputs
+    dim_objs = normalize_dimensions(dimensions)
+    metric_objs = normalize_metrics(metrics)
+
+    # Ensure property_id has correct format
+    if not property_id.startswith("properties/"):
+        property_id = f"properties/{property_id}"
+
+    # Build request
+    request_params = {
+        "property": property_id,
+        "dimensions": dim_objs,
+        "metrics": metric_objs,
+        "date_ranges": [DateRange(start_date=start_date, end_date=end_date)],
+    }
+
+    # Add optional parameters
+    if limit is not None:
+        request_params["limit"] = limit
+    if offset is not None:
+        request_params["offset"] = offset
+    if dimension_filter is not None:
+        request_params["dimension_filter"] = dimension_filter
+    if metric_filter is not None:
+        request_params["metric_filter"] = metric_filter
+    if order_bys is not None:
+        request_params["order_bys"] = order_bys
+
+    # Merge with any additional kwargs
+    request_params.update(kwargs)
+
+    # Create request and execute
+    request = RunReportRequest(**request_params)
+    return query(service_account, request, report_type=ReportType.REPORT)
