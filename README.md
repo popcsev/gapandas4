@@ -5,12 +5,14 @@ GAPandas4 is a Python package for querying the Google Analytics Data API for GA4
 In order to use GAPandas4 you will first need to [create a Google Service Account](https://practicaldatascience.co.uk/data-engineering/how-to-create-a-google-service-account-client-secrets-json-key) with access to the Google Analytics Data API and export a client secrets JSON keyfile to use for authentication. You'll also need to add the service account email address as a user on the Google Analytics 4 property you wish to access, and you'll need to note the property ID to use in your queries.  
 
 ### Installation
-You can install GAPandas4 in two ways: via GitHub or via PyPi using the Pip Python package management system. 
+
+**Install from this repository (recommended for latest features):**
 
 ```commandline
-pip3 install git+https://github.com/practical-data-science/gapandas4.git
-pip3 install gapandas4
+pip3 install git+https://github.com/popcsev/gapandas4.git
 ```
+
+**Note:** This is an enhanced fork of the original GAPandas4 with additional features including filter helpers, data export utilities, and comprehensive testing. The PyPI package (`pip install gapandas4`) installs the original version without these enhancements.
 
 ### Usage examples
 GAPandas4 has been written to allow you to use as little code as possible. Unlike the previous version of GAPandas for Universal Analytics, which used a payload based on a Python dictionary, GAPandas4 now uses a Protobuf (Protocol Buffer) payload as used in the API itself. 
