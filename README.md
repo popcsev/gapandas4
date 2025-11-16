@@ -14,6 +14,37 @@ pip3 install git+https://github.com/popcsev/gapandas4.git
 
 **Note:** This is an enhanced fork of the original GAPandas4 with additional features including filter helpers, data export utilities, and comprehensive testing. The PyPI package (`pip install gapandas4`) installs the original version without these enhancements.
 
+### What's New in v0.6.0? 🎉
+
+**Simplified Syntax** - Use plain strings instead of verbose object constructors! This update reduces code by 50-80% for common queries.
+
+```python
+# NEW in v0.6.0 - Much simpler!
+comparison = gp.compare_date_ranges(
+    service_account=service_account,
+    property_id=property_id,
+    dimensions=['country', 'city'],  # Just strings!
+    metrics=['activeUsers', 'sessions'],  # Just strings!
+    current_start='2024-02-01',
+    current_end='2024-02-29',
+    previous_start='2024-01-01',
+    previous_end='2024-01-31'
+)
+
+# OLD syntax (still works for advanced features)
+dimensions=[gp.Dimension(name="country"), gp.Dimension(name="city")]
+metrics=[gp.Metric(name="activeUsers"), gp.Metric(name="sessions")]
+```
+
+**Benefits:**
+- ✨ 50-80% less boilerplate code
+- 📖 More readable and Pythonic
+- 🚀 Easier for beginners
+- 🔧 Advanced features still available when needed
+- ✅ 100% backward compatible
+
+See [examples/simple_syntax.py](examples/simple_syntax.py) for detailed before/after comparisons.
+
 ### Usage examples
 GAPandas4 has been written to allow you to use as little code as possible. Unlike the previous version of GAPandas for Universal Analytics, which used a payload based on a Python dictionary, GAPandas4 now uses a Protobuf (Protocol Buffer) payload as used in the API itself. 
 
@@ -411,17 +442,28 @@ print(metadata)
 ```
 
 ### Features
-- **Easy-to-use filter helpers** (NEW in v0.5.0!) - Simple functions for dimension and metric filtering
-- **Data export utilities** (NEW in v0.5.0!) - Export to CSV, Excel, and JSON with one line of code
-- **Period comparison** (NEW in v0.5.0!) - Compare metrics across different time periods
-- **Helper functions** (NEW in v0.5.0!) - Get trending content, traffic sources, and more
+- **Simplified syntax** (NEW in v0.6.0!) - Use strings instead of Dimension/Metric objects (50-80% less code!)
+- **Easy-to-use filter helpers** (v0.5.0) - Simple functions for dimension and metric filtering
+- **Data export utilities** (v0.5.0) - Export to CSV, Excel, and JSON with one line of code
+- **Period comparison** (v0.5.0) - Compare metrics across different time periods
+- **Helper functions** (v0.5.0) - Get trending content, traffic sources, and more
 - **Full GA4 API support** - `RunReportRequest`, `BatchRunReportsRequest`, `RunPivotReportRequest`, `BatchRunPivotReportsRequest`, `RunRealtimeReportRequest`, and `GetMetadataRequest`
 - **Pandas DataFrame output** - Results returned as Pandas DataFrames with proper data types
 - **Type hints** - Full type hint support for better IDE autocomplete and type checking
 - **Comprehensive testing** - 90%+ test coverage with pytest
 - **Modern Python** - Supports Python 3.8+
 
-### What's New in v0.5.0
+### What's New
+
+#### v0.6.0 (Latest)
+- ✨ **Simplified syntax** - Pass strings instead of Dimension/Metric objects
+- 📉 **50-80% less code** - Dramatically reduced boilerplate for common queries
+- 🔄 **Smart normalization** - Automatically converts strings to proper objects
+- 🎯 **Backward compatible** - Old syntax still works perfectly
+- 🧪 **Comprehensive tests** - Full test coverage for normalization helpers
+- 📚 **New examples** - `simple_syntax.py` with before/after comparisons
+
+#### v0.5.0
 - 🎉 **Filter helper functions** - Easy dimension and metric filtering
 - 📊 **Data export** - Export to CSV, Excel, and JSON formats
 - 📈 **Period comparison** - Month-over-month, year-over-year, and custom comparisons

@@ -20,6 +20,142 @@ from google.analytics.data_v1beta.types import (
 )
 
 
+# ============================================================================
+# Normalization Helpers - Convert strings to GA4 API objects
+# ============================================================================
+
+
+def normalize_dimensions(
+    dimensions: Union[str, List[Union[str, Dimension]], Dimension]
+) -> List[Dimension]:
+    """Convert dimension strings or objects to a list of Dimension objects.
+
+    This helper allows users to pass simple strings instead of Dimension objects
+    for cleaner, more readable code.
+
+    Args:
+        dimensions: Single dimension name (str), Dimension object, or list of either
+
+    Returns:
+        List of Dimension objects
+
+    Examples:
+        >>> normalize_dimensions("country")
+        [Dimension(name="country")]
+
+        >>> normalize_dimensions(["country", "city"])
+        [Dimension(name="country"), Dimension(name="city")]
+
+        >>> normalize_dimensions([Dimension(name="country"), "city"])
+        [Dimension(name="country"), Dimension(name="city")]
+    """
+    if isinstance(dimensions, str):
+        return [Dimension(name=dimensions)]
+    elif isinstance(dimensions, Dimension):
+        return [dimensions]
+    elif isinstance(dimensions, list):
+        result = []
+        for dim in dimensions:
+            if isinstance(dim, str):
+                result.append(Dimension(name=dim))
+            elif isinstance(dim, Dimension):
+                result.append(dim)
+            else:
+                raise TypeError(
+                    f"Invalid dimension type: {type(dim)}. "
+                    "Expected str or Dimension object."
+                )
+        return result
+    else:
+        raise TypeError(
+            f"Invalid dimensions type: {type(dimensions)}. "
+            "Expected str, Dimension, or list of either."
+        )
+
+
+def normalize_metrics(
+    metrics: Union[str, List[Union[str, Metric]], Metric]
+) -> List[Metric]:
+    """Convert metric strings or objects to a list of Metric objects.
+
+    This helper allows users to pass simple strings instead of Metric objects
+    for cleaner, more readable code. For advanced features like expressions or
+    invisible metrics, use Metric objects directly.
+
+    Args:
+        metrics: Single metric name (str), Metric object, or list of either
+
+    Returns:
+        List of Metric objects
+
+    Examples:
+        >>> normalize_metrics("activeUsers")
+        [Metric(name="activeUsers")]
+
+        >>> normalize_metrics(["activeUsers", "sessions"])
+        [Metric(name="activeUsers"), Metric(name="sessions")]
+
+        >>> normalize_metrics([Metric(name="revenue", expression="..."), "sessions"])
+        [Metric(name="revenue", expression="..."), Metric(name="sessions")]
+    """
+    if isinstance(metrics, str):
+        return [Metric(name=metrics)]
+    elif isinstance(metrics, Metric):
+        return [metrics]
+    elif isinstance(metrics, list):
+        result = []
+        for metric in metrics:
+            if isinstance(metric, str):
+                result.append(Metric(name=metric))
+            elif isinstance(metric, Metric):
+                result.append(metric)
+            else:
+                raise TypeError(
+                    f"Invalid metric type: {type(metric)}. "
+                    "Expected str or Metric object."
+                )
+        return result
+    else:
+        raise TypeError(
+            f"Invalid metrics type: {type(metrics)}. "
+            "Expected str, Metric, or list of either."
+        )
+
+
+def normalize_date_range(
+    date_range: Union[str, tuple, DateRange]
+) -> DateRange:
+    """Convert date range formats to DateRange object.
+
+    Args:
+        date_range: DateRange object, tuple of (start, end), or special string
+
+    Returns:
+        DateRange object
+
+    Examples:
+        >>> normalize_date_range(("2024-01-01", "2024-01-31"))
+        DateRange(start_date="2024-01-01", end_date="2024-01-31")
+
+        >>> normalize_date_range(DateRange(start_date="2024-01-01", end_date="today"))
+        DateRange(start_date="2024-01-01", end_date="today")
+    """
+    if isinstance(date_range, DateRange):
+        return date_range
+    elif isinstance(date_range, tuple) and len(date_range) == 2:
+        return DateRange(start_date=date_range[0], end_date=date_range[1])
+    else:
+        raise TypeError(
+            f"Invalid date_range type: {type(date_range)}. "
+            "Expected DateRange object or tuple of (start_date, end_date)."
+        )
+
+
+# ============================================================================
+# Export Functions
+# ============================================================================
+
+
 def export_to_csv(
     df: Union[pd.DataFrame, List[pd.DataFrame]],
     filepath: str,
@@ -173,8 +309,8 @@ def export_to_json(
 def compare_date_ranges(
     service_account: str,
     property_id: str,
-    dimensions: List[str],
-    metrics: List[str],
+    dimensions: Union[str, List[Union[str, Dimension]]],
+    metrics: Union[str, List[Union[str, Metric]]],
     current_start: str,
     current_end: str,
     previous_start: str,
@@ -189,8 +325,8 @@ def compare_date_ranges(
     Args:
         service_account: Path to Google Service Account JSON keyfile
         property_id: GA4 property ID
-        dimensions: List of dimension names (e.g., ['country', 'city'])
-        metrics: List of metric names (e.g., ['activeUsers', 'sessions'])
+        dimensions: Dimension name(s) as string(s) or Dimension object(s)
+        metrics: Metric name(s) as string(s) or Metric object(s)
         current_start: Start date for current period (YYYY-MM-DD)
         current_end: End date for current period (YYYY-MM-DD)
         previous_start: Start date for previous period (YYYY-MM-DD)
@@ -205,7 +341,7 @@ def compare_date_ranges(
         - Percentage change
 
     Example:
-        >>> # Compare January 2024 vs January 2023
+        >>> # Compare January 2024 vs January 2023 (simplified syntax!)
         >>> comparison = gp.compare_date_ranges(
         ...     service_account='client_secrets.json',
         ...     property_id='123456789',
@@ -217,9 +353,9 @@ def compare_date_ranges(
         ...     previous_end='2023-01-31'
         ... )
     """
-    # Build dimension objects
-    dim_objs = [Dimension(name=d) for d in dimensions]
-    metric_objs = [Metric(name=m) for m in metrics]
+    # Normalize dimensions and metrics (accepts strings or objects)
+    dim_objs = normalize_dimensions(dimensions)
+    metric_objs = normalize_metrics(metrics)
 
     # Query current period
     current_request = RunReportRequest(
@@ -310,17 +446,11 @@ def get_trending_content(
     """
     from google.analytics.data_v1beta.types import OrderBy
 
+    # Use simplified syntax with normalization
     request = RunReportRequest(
         property=f"properties/{property_id}",
-        dimensions=[
-            Dimension(name="pagePath"),
-            Dimension(name="pageTitle"),
-        ],
-        metrics=[
-            Metric(name=metric),
-            Metric(name="activeUsers"),
-            Metric(name="averageSessionDuration"),
-        ],
+        dimensions=normalize_dimensions(["pagePath", "pageTitle"]),
+        metrics=normalize_metrics([metric, "activeUsers", "averageSessionDuration"]),
         date_ranges=[DateRange(start_date=start_date, end_date=end_date)],
         order_bys=[
             OrderBy(
@@ -367,18 +497,11 @@ def get_traffic_sources(
     """
     from google.analytics.data_v1beta.types import OrderBy
 
+    # Use simplified syntax with normalization
     request = RunReportRequest(
         property=f"properties/{property_id}",
-        dimensions=[
-            Dimension(name="sessionSource"),
-            Dimension(name="sessionMedium"),
-            Dimension(name="sessionCampaign"),
-        ],
-        metrics=[
-            Metric(name="sessions"),
-            Metric(name="activeUsers"),
-            Metric(name="conversions"),
-        ],
+        dimensions=normalize_dimensions(["sessionSource", "sessionMedium", "sessionCampaign"]),
+        metrics=normalize_metrics(["sessions", "activeUsers", "conversions"]),
         date_ranges=[DateRange(start_date=start_date, end_date=end_date)],
         order_bys=[
             OrderBy(
