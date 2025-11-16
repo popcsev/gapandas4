@@ -8,7 +8,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
     name='gapandas4',
     packages=['gapandas4'],
-    version='0.003',
+    version='0.004',
     license='MIT',
     description='GAPandas4 is a Python package for accessing the Google Analytics Data API for GA4 using Pandas',
     long_description=long_description,
@@ -19,11 +19,27 @@ setup(
     download_url='https://github.com/practicaldatascience/gapandas4/archive/master.zip',
     keywords=['python', 'google analytics', 'ga', 'pandas', 'universal analytics', 'gapandas', 'ga4'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
-    install_requires=['pandas', 'google-analytics-data']
+    python_requires='>=3.8',
+    install_requires=['pandas>=1.2.5', 'google-analytics-data>=0.16.0'],
+    extras_require={
+        'dev': [
+            'pytest>=7.0.0',
+            'pytest-cov>=4.0.0',
+            'black>=23.0.0',
+            'flake8>=6.0.0',
+            'mypy>=1.0.0',
+            'isort>=5.12.0',
+        ],
+    },
 )
